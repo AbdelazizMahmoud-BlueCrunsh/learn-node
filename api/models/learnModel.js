@@ -8,10 +8,17 @@ const User = db.sequelize.define('User', {
     },
     lastName: {
         type: db.DataTypes.STRING
-        // allowNull defaults to true
+    },
+    email: {
+        type: db.DataTypes.STRING
+    }, password: {
+        type: db.DataTypes.STRING
+    }, token: {
+        type: db.DataTypes.STRING
     }
 }, {
     // Other model options go here
 });
 
 module.exports = User;
+

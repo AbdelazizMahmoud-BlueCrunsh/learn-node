@@ -2,6 +2,8 @@
 
 
 const Users = require("../models/learnModel");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const valid = require("../Requests/userValidation")
 
 exports.print = function (req, res) {
@@ -16,15 +18,24 @@ exports.create = function (req, res) {
         });
         return;
     }
-    Users.create(req.body)
-        .then((data) => {
-            res.send(data);
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while create the Notes",
+    const user = {}
+    user.firstName = req.body.firstName
+    user.lastName = req.body.lastName
+    user.email = req.body.email
+    bcrypt.hash(req.body.password, 10, function (err, hash) {
+        user.password = hash;
+        user.token = crypto.randomBytes(16).toString('hex');
+        Users.create(user)
+            .then((data) => {
+                res.send(data);
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while create the Notes",
+                });
             });
-        });
+    });
+
 };
 
 exports.index = function (req, res) {
